@@ -19,7 +19,7 @@ iptables -A OUTPUT -p tcp -d 192.168.7.0/24 --match multiport --sports 601,587,9
 iptables -A INPUT -p udp -s 192.168.7.0/24 --match multiport --dports 53,137,138,514 -m state --state NEW,ESTABLISHED -j ACCEPT
 iptables -A OUTPUT -p udp -d 192.168.7.0/24 --match multiport --sports 53,137,138,514 -m state --state NEW,ESTABLISHED -j ACCEPT
 
-//PING
+##PING
 iptables -A INPUT -p icmp -j ACCEPT
 iptables -A OUTPUT -p icmp -j ACCEPT
 iptables -A INPUT -i lo -j ACCEPT
@@ -29,7 +29,7 @@ ip6tables -I OUTPUT ! -o lo -j DROP
 ip6tables -I FORWARD -j DROP
 iptables -P OUTPUT DROP
 
-//DNS
+##DNS
 echo "Type dns ip"
 read dns
 iptables -A OUTPUT -p udp --dport 53 -d $dns -m state --state NEW,ESTABLISHED -j ACCEPT
@@ -37,10 +37,13 @@ iptables -A OUTPUT -p tcp --dport 53 -d $dns -m state --state NEW,ESTABLISHED -j
 iptables -A INPUT -p udp --sport 53 -s $dns -m state --state NEW,ESTABLISHED -j ACCEPT
 iptables -A INPUT -p tcp --sport 53 -s $dns -m state --state NEW,ESTABLISHED -j ACCEPT 
 
-//HTTP/S
+##HTTP/S
 iptables -A OUTPUT -p tcp --match multiport --dports 80,443 -j ACCEPT 
 iptables -A INPUT -p tcp --match multiport --sports 80,443 -j ACCEPT 
 
-//EXPORT RULES
+##EXPORT RULES
 iptables-save > step7.iptables.rules
-Ip6tables-save > step7.ip6tables.rules
+ip6tables-save > step7.ip6tables.rules
+
+##DISPLAY RULES
+iptables -nL INPUT --line-numbers
